@@ -1,5 +1,6 @@
-import { useMemo, createContext, useEffect, useState } from "react";
-import axios from "axios";
+import {useMemo, createContext, useEffect, useState} from 'react';
+import axios from 'axios';
+import {baseUrl} from '../config';
 
 export const AppContext = createContext([]);
 const PageSize = 10;
@@ -29,16 +30,16 @@ export const useAppContext = () => {
   return customers;
 };
 
-const AppContextProvider = ({ children }) => {
+const AppContextProvider = ({children}) => {
   const [customers, setCustomers] = useState([]);
-  const [searchCustomer, setSearchCustomer] = useState("");
+  const [searchCustomer, setSearchCustomer] = useState('');
   function handleSearch(e) {
     setSearchCustomer(e.target.value.substr(0, 20));
   }
 
   async function getCustomers() {
     await axios
-      .get(`http://localhost:5000/api/customers`)
+      .get(`${baseUrl}/api/customers`)
       // .then((resp) => resp.json())
       .then((response) => {
         if (response.status === 200) {
@@ -58,7 +59,7 @@ const AppContextProvider = ({ children }) => {
     return (
       customers &&
       customers.filter(
-        ({ second_name }) =>
+        ({second_name}) =>
           second_name.toLowerCase().indexOf(searchCustomer.toLowerCase()) !== -1
       )
     );
@@ -77,7 +78,7 @@ const AppContextProvider = ({ children }) => {
 
   const handleChangePage = (action) => {
     setCurrentPage((prevPage) =>
-      action === "next" ? prevPage + 1 : prevPage - 1
+      action === 'next' ? prevPage + 1 : prevPage - 1
     );
   };
   const value = {
